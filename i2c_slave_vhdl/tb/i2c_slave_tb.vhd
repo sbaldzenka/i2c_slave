@@ -41,23 +41,23 @@ architecture behavioral of i2c_slave_tb is
     port
     (
         -- system signals
-        clk_i               : in  std_logic;
-        reset_n_i           : in  std_logic;
+        i_clk               : in  std_logic;
+        i_reset_n           : in  std_logic;
         -- slave data bus
-        s_valid_i           : in  std_logic;
-        s_data_i            : in  std_logic_vector(7 downto 0);
+        i_s_valid           : in  std_logic;
+        i_s_data            : in  std_logic_vector(7 downto 0);
         -- master data bus
-        m_valid_o           : out std_logic;
-        m_data_o            : out std_logic_vector(7 downto 0);
+        o_m_valid           : out std_logic;
+        o_m_data            : out std_logic_vector(7 downto 0);
         -- status signals
-        start_transaction_o : out std_logic;
-        end_transaction_o   : out std_logic;
-        get_byte_ready_o    : out std_logic;
+        o_start_transaction : out std_logic;
+        o_end_transaction   : out std_logic;
+        o_get_byte_ready    : out std_logic;
         -- i2c signals
-        scl_i               : in  std_logic;
-        sda_en_o            : out std_logic;
-        sda_i               : in  std_logic;
-        sda_o               : out std_logic
+        i_scl               : in  std_logic;
+        o_sda_en            : out std_logic;
+        i_sda               : in  std_logic;
+        o_sda               : out std_logic
     );
     end component;
 
@@ -97,6 +97,7 @@ begin
         sda_i <= '1';
         wait for 10 us;
         scl   <= '1';   -- 2 bit
+        sda_i <= '0';
         wait for 10 us;
         scl   <= '0';
         wait for 10 us;
@@ -473,23 +474,23 @@ begin
     port map
     (
         -- system signals
-        clk_i               => clk,
-        reset_n_i           => resetn,
+        i_clk               => clk,
+        i_reset_n           => resetn,
         -- slave data bus
-        s_valid_i           => s_valid_ff,
-        s_data_i            => s_data_ff,
+        i_s_valid           => s_valid_ff,
+        i_s_data            => s_data_ff,
         -- master data bus
-        m_valid_o           => m_valid,
-        m_data_o            => m_data,
+        o_m_valid           => m_valid,
+        o_m_data            => m_data,
         -- status signals
-        start_transaction_o => start_transaction,
-        end_transaction_o   => end_transaction,
-        get_byte_ready_o    => get_byte_ready,
+        o_start_transaction => start_transaction,
+        o_end_transaction   => end_transaction,
+        o_get_byte_ready    => get_byte_ready,
         -- i2c signals
-        scl_i               => scl,
-        sda_en_o            => sda_en,
-        sda_i               => sda_i,
-        sda_o               => sda_o
+        i_scl               => scl,
+        o_sda_en            => sda_en,
+        i_sda               => sda_i,
+        o_sda               => sda_o
     );
 
 end behavioral;

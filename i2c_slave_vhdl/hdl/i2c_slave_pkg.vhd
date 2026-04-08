@@ -5,12 +5,12 @@
 -- description : https://github.com/sbaldzenka/i2c_slave/i2c_slave_vhdl
 
 library ieee;
-use ieee.std_logic_1164.ALL;
+use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 package i2c_slave_pkg is
 
-    constant ADDRESS_I2C : std_logic_vector(6 downto 0) := b"0110_110";
+    constant ADDRESS_I2C : std_logic_vector(6 downto 0) := b"1000_100";
 
     type i2c_states is
     (
