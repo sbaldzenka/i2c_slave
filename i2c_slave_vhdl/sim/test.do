@@ -8,11 +8,12 @@ vlib work
 vmap work work
 
 vcom -93 ../tb/i2c_slave_tb.vhd
-vcom -93 ../hdl/i2c_slave_pkg.vhd
+
 vcom -93 ../hdl/i2c_slave.vhd
+vcom -93 ../hdl/tristate_buffer.vhd
 
 vsim -t 1ps -voptargs=+acc=lprn -lib work i2c_slave_tb
 
 do wave_test.do
 view wave
-run 2 ms
+run 3 ms
