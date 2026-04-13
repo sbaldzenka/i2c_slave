@@ -1,0 +1,4 @@
+i2c_slave_vhdl/sim/work
+*.wlf
+transcript
+*.ini
