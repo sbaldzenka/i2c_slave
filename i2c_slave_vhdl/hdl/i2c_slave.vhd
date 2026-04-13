@@ -81,6 +81,7 @@ architecture behavioral of i2c_slave is
     signal srl_register_in   : std_logic_vector(7 downto 0);
     signal srl_register_out  : std_logic_vector(7 downto 0);
     signal rw_flag           : std_logic;
+    signal ack_flag          : std_logic;
     signal address_flag      : std_logic;
     signal i2c_state         : i2c_states;
 
@@ -158,6 +159,21 @@ begin
                 else
                     rw_flag <= '0';
                 end if;
+            end if;
+        end if;
+    end process;
+
+    ACK_FLAG_GEN: process(i_clk)
+    begin
+        if rising_edge(i_clk) then
+            if (i2c_state = S_R_NACK_CHECK and r_edge_detect = '1') then
+                if (sync_sda_i_reg_ff = '1') then
+                    ack_flag <= '1';
+                else
+                    ack_flag <= '0';
+                end if;
+            elsif (i2c_state = S_IDLE) then
+                ack_flag <= '0';
             end if;
         end if;
     end process;
@@ -259,10 +275,10 @@ begin
         if rising_edge(i_clk) then
             if (i2c_state = S_READ) then
                 o_sda <= srl_register_out(7);
-            elsif (i2c_state = S_W_ACK) then
-                o_sda <= '1';
-            else
+            elsif (i2c_state = S_W_ACK or i2c_state = S_R_ACK) then
                 o_sda <= '0';
+            else
+                o_sda <= '1';
             end if;
         end if;
     end process;
@@ -270,7 +286,7 @@ begin
     SDA_EN_CONTROL: process(i_clk)
     begin
         if rising_edge(i_clk) then
-            if (i2c_state = S_W_ACK or i2c_state = S_READ) then
+            if (i2c_state = S_W_ACK or i2c_state = S_R_ACK or i2c_state = S_READ) then
                 o_sda_en <= '1';
             else
                 o_sda_en <= '0';
@@ -349,7 +365,7 @@ begin
 
                     when S_R_NACK_CHECK =>
                         if (f_edge_detect = '1') then
-                            if (sync_sda_i_reg_ff = '0') then
+                            if (ack_flag = '1') then
                                 i2c_state <= S_STOP_READ;
                             else
                                 i2c_state <= S_GET_BYTE;

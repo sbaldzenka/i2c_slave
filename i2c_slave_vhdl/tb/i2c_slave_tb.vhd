@@ -356,7 +356,7 @@ begin
         scl <= '1';
         wait for 10 us;
         scl <= '0';   -- ack
-        sda <= '1';
+        sda <= '0';
         wait for 10 us;
         scl <= '1';
         wait for 10 us;
